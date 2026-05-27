@@ -80,32 +80,4 @@ anna@gmw.bank
 admin@gmw.bank / 12345678
 ```
 
-## Реальная отправка писем на Gmail
-
-В файле `backend/.env` укажи SMTP. Для Gmail нужен пароль приложения Google, а не обычный пароль.
-
-```env
-SMTP_HOST="smtp.gmail.com"
-SMTP_PORT="587"
-SMTP_SECURE="false"
-SMTP_USER="your-gmail@gmail.com"
-SMTP_PASS="your_google_app_password"
-MAIL_FROM="G.M.W Bank <your-gmail@gmail.com>"
-```
-
-Где взять пароль приложения: Google Account → Security → 2-Step Verification → App passwords.
-
-Если SMTP не настроен, проект не падает: код подтверждения будет показан в терминале backend в dev-режиме.
-
-## После замены старой версии проекта
-
-Если база конфликтует со старой схемой:
-
-```powershell
-cd backend
-npx prisma db push --force-reset
-npm run prisma:seed
-npm run dev
-```
-
 Это удалит старые учебные данные и создаст свежую структуру.
