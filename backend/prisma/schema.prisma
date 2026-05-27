@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+  SUPPORT
+}
+
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+}
+
+enum AccountStatus {
+  ACTIVE
+  BLOCKED
+}
+
+enum CardStatus {
+  ACTIVE
+  BLOCKED
+}
+
+enum TransactionType {
+  TOP_UP
+  TRANSFER
+  PAYMENT
+  CASHBACK
+  FEE
+  REFUND
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model User {
+  id                    String   @id @default(uuid())
+  firstName             String
+  lastName              String
+  email                 String   @unique
+  phone                 String   @unique
+  passwordHash          String
+  role                  Role     @default(CLIENT)
+  status                UserStatus @default(ACTIVE)
+  score                 Int      @default(500)
+  emailVerified         Boolean  @default(false)
+  phoneVerified         Boolean  @default(false)
+  emailVerificationCode String?
+  emailVerificationExpiresAt DateTime?
+  phoneVerificationCode String?
+  phoneVerificationExpiresAt DateTime?
+  twoFactorEnabled      Boolean  @default(false)
+  twoFactorSecret       String?
+  accounts              Account[]
+  cards                 Card[]
+  notifications         Notification[]
+  supportTickets        SupportTicket[]
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Account {
+  id            String @id @default(uuid())
+  userId        String
+  user          User   @relation(fields: [userId], references: [id])
+  accountNumber String @unique
+  balance       Decimal @default(0)
+  currency      String @default("RUB")
+  status        AccountStatus @default(ACTIVE)
+  cards         Card[]
+  outgoing      Transaction[] @relation("OutgoingTransactions")
+  incoming      Transaction[] @relation("IncomingTransactions")
+  createdAt     DateTime @default(now())
+}
+
+model Card {
+  id           String @id @default(uuid())
+  userId       String
+  accountId    String
+  user         User @relation(fields: [userId], references: [id])
+  account      Account @relation(fields: [accountId], references: [id])
+  cardNumber   String @unique
+  cardHolder   String
+  expiryDate   String
+  cvvHash      String
+  cardType     String @default("G.M.W Black")
+  status       CardStatus @default(ACTIVE)
+  dailyLimit   Decimal @default(150000)
+  monthlyLimit Decimal @default(750000)
+  createdAt    DateTime @default(now())
+}
+
+model Transaction {
+  id                String @id @default(uuid())
+  senderAccountId   String?
+  receiverAccountId String?
+  senderAccount     Account? @relation("OutgoingTransactions", fields: [senderAccountId], references: [id])
+  receiverAccount   Account? @relation("IncomingTransactions", fields: [receiverAccountId], references: [id])
+  amount            Decimal
+  currency          String @default("RUB")
+  type              TransactionType
+  status            TransactionStatus @default(SUCCESS)
+  category          String @default("Другое")
+  comment           String?
+  createdAt         DateTime @default(now())
+}
+
+model Notification {
+  id        String @id @default(uuid())
+  userId    String
+  user      User @relation(fields: [userId], references: [id])
+  title     String
+  message   String
+  isRead    Boolean @default(false)
+  createdAt DateTime @default(now())
+}
+
+model SupportTicket {
+  id        String @id @default(uuid())
+  userId    String
+  user      User @relation(fields: [userId], references: [id])
+  subject   String
+  message   String
+  status    String @default("OPEN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

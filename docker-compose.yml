@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: gmw_bank_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: gmw_bank
+    ports:
+      - "5432:5432"
+    volumes:
+      - gmw_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  gmw_postgres_data:

@@ -1,0 +1,35 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const cors_1 = __importDefault(require("cors"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const express_1 = __importDefault(require("express"));
+const auth_routes_1 = require("./routes/auth.routes");
+const accounts_routes_1 = require("./routes/accounts.routes");
+const cards_routes_1 = require("./routes/cards.routes");
+const transactions_routes_1 = require("./routes/transactions.routes");
+const analytics_routes_1 = require("./routes/analytics.routes");
+const support_routes_1 = require("./routes/support.routes");
+const admin_routes_1 = require("./routes/admin.routes");
+const users_routes_1 = require("./routes/users.routes");
+dotenv_1.default.config();
+const app = (0, express_1.default)();
+app.use((0, cors_1.default)({ origin: true, credentials: true }));
+app.use(express_1.default.json());
+app.get('/api/health', (_req, res) => res.json({ status: 'ok', service: 'G.M.W Bank API' }));
+app.use('/api/auth', auth_routes_1.authRouter);
+app.use('/api/accounts', accounts_routes_1.accountsRouter);
+app.use('/api/cards', cards_routes_1.cardsRouter);
+app.use('/api/transactions', transactions_routes_1.transactionsRouter);
+app.use('/api/users', users_routes_1.usersRouter);
+app.use('/api/analytics', analytics_routes_1.analyticsRouter);
+app.use('/api/support', support_routes_1.supportRouter);
+app.use('/api/admin', admin_routes_1.adminRouter);
+app.use((err, _req, res, _next) => {
+    console.error(err);
+    res.status(500).json({ message: 'Ошибка сервера', details: err?.message });
+});
+const port = Number(process.env.PORT) || 4000;
+app.listen(port, () => console.log(`G.M.W Bank API started on http://localhost:${port}`));
