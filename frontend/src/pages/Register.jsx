@@ -24,7 +24,7 @@ export function Register() {
                 password: form.password
             });
             localStorage.setItem('gmw_token', response.data.token);
-            setMessage('Аккаунт создан. Код подтверждения отправлен на почту. Телефон подтверждается учебным кодом в профиле. Переводы и пополнение станут доступны после подтверждения почты и телефона.');
+            setMessage('Аккаунт создан.');
             if (response.data.verification?.devEmailCode || response.data.verification?.devPhoneCode) {
                 setDevCodes({ email: response.data.verification.devEmailCode, phone: response.data.verification.devPhoneCode });
             }
