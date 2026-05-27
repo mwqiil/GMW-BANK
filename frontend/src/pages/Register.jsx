@@ -36,7 +36,7 @@ export function Register() {
     return (<div className="grid min-h-screen place-items-center bg-gmw-soft p-5">
       <form onSubmit={submit} className="w-full max-w-2xl rounded-[2rem] bg-white p-8 shadow-sm">
         <h1 className="text-3xl font-black">Открыть счёт G.M.W</h1>
-        <p className="mt-2 text-slate-500">После регистрации будет создан виртуальный счёт и карта. На реальную почту придёт код подтверждения, если SMTP настроен в backend/.env.</p>
+        <p className="mt-2 text-slate-500">После регистрации будет создан виртуальный счёт и карта.</p>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           <Field label="Имя" value={form.firstName} onChange={(v) => setField('firstName', v)}/>
           <Field label="Фамилия" value={form.lastName} onChange={(v) => setField('lastName', v)}/>
