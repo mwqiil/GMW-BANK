@@ -47,7 +47,7 @@ export function Register() {
         </div>
         {message && <p className="mt-4 rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">{message}</p>}
         {devCodes && (<div className="mt-4 rounded-2xl bg-amber-50 p-4 text-sm text-amber-800">
-            <p className="font-black">Dev-коды отображаются только если SMTP/SMS не настроены:</p>
+            <p className="font-black">!</p>
             {devCodes.email && <p>Email: {devCodes.email}</p>}
             {devCodes.phone && <p>Телефон: {devCodes.phone}</p>}
           </div>)}
